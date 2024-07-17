@@ -2,22 +2,22 @@
 
 import { client } from "@/lib/prisma";
 
-export const onToggleRealtime = async (id:string, state:boolean) => {
+export const onToggleRealtime = async (id: string, state: boolean) => {
     try {
         const chatRoom = await client.chatRoom.update({
             where: {
                 id
             },
-            data:{
-                live:state
+            data: {
+                live: state
             },
             select: {
-                id:true,
-                live:true
+                id: true,
+                live: true
             }
         })
 
-        if(chatRoom) {
+        if (chatRoom) {
             return {
                 status: 200,
                 message: chatRoom.live
@@ -25,7 +25,7 @@ export const onToggleRealtime = async (id:string, state:boolean) => {
                     : 'Canlı mod aktif değil'
             }
         }
-    }catch(error) {
+    } catch (error) {
         console.log(error)
     }
 }
@@ -44,7 +44,98 @@ export const onGetConversationMode = async (id: string) => {
 
 
         return mode;
-    }catch(error) {
+    } catch (error) {
         console.log(error)
+    }
+}
+
+
+export const onGetDomainChatRooms = async (id: string) => {
+    try {
+        const domains = await client.domain.findUnique({
+            where: {
+                id
+            },
+            select: {
+                customer: {
+                    select: {
+                        email: true,
+                        // Son mesajı göstermek için
+                        chatRoom: {
+                            select: {
+                                createdAt: true,
+                                id: true,
+                                message: {
+                                    select: {
+                                        message: true,
+                                        createdAt: true,
+                                        seen: true
+                                    },
+                                    orderBy:{
+                                        createdAt:'desc'
+                                    },
+                                    take: 1
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        if(domains) {
+            return domains
+        }
+    } catch (error) {
+        console.error('[onGetDomainChatRooms]', error)
+    }
+}
+
+export const onGetChatMessages = async (id:string) => {
+    try {
+        const messages = await client.chatRoom.findMany({
+            where: {
+                id
+            },
+            select: {
+                id:true,
+                live:true,
+                message:{
+                    select: {
+                        id:true,
+                        role:true,
+                        message:true,
+                        createdAt:true,
+                        seen:true
+                    },
+                    orderBy: {
+                        createdAt: 'asc'
+                    }
+                }
+            }
+
+        })
+
+        if(messages) {
+            return messages
+        }
+    }catch(error) {
+        console.log('[onGetChatMessages]', error)
+    }
+}
+
+// ilk tıkladığın kişinin tüm mesajlarını okundu olarak işaretle
+export const onViewUnReadMessages = async(id:string) => {
+    try {
+        await client.chatMessage.updateMany({
+            where: {
+                chatRoomId: id
+            },
+            data:{
+                seen:true
+            }
+        })
+    }catch(error) {
+        console.log('[onViewUnReadMessages]', error)
     }
 }
