@@ -5,6 +5,10 @@
 * Neon Tech
 - https://neon.tech/
 
+* Pusher
+- npm i pusher
+- npm i pusher-js
+
 * Shadcn
 - npx shadcn-ui@latest add --all
 
