@@ -6,7 +6,9 @@ const isPublicRoute = createRouteMatcher([
   '/sign-up(.*)',
   '/images(.*)',
   '/', '/auth(.*)',
-   '/portal(.*)']);
+   '/portal(.*)',
+  '/chatbot'
+  ]);
 
 const isProtectedRoute = createRouteMatcher([
   '/dashboard(.*)',

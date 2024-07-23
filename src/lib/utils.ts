@@ -28,6 +28,11 @@ export const extractUUIDFromString = (url:string) => {
 //   }
 // )
 
+export const postToParent = (message:string) => {
+  window.parent.postMessage(message, '*')
+
+}
+
 export const getMonthName = (month: number) => {
   return month == 1
     ? 'Ocak'
