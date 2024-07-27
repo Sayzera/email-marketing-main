@@ -39,7 +39,7 @@ export const useSignInForm = () => {
                         description: 'Hoş geldiniz'
                     })
 
-                    router.push('/dashboard')
+                    router.push('/')
                 }
             } catch (error: any) {
                 setLoading(false);
