@@ -4,6 +4,7 @@ import { client } from "@/lib/prisma"
 import { extractEmilsFromString } from "@/lib/utils"
 import { onRealTimeChat } from "../conversation"
 import { clerkClient } from "@clerk/nextjs/server"
+import { onMailer } from "../mailer"
 
 
 export const onStoreConversations  = async(
@@ -201,7 +202,18 @@ export const onAiChatBotAssistant = async (
                                 }
                             }
                         }
+
+                        return {
+                            live:true,
+                            chatRoom: checkCustomer.customer[0].chatRoom[0].id
+                        }
                     } 
+
+                    await onStoreConversations(
+                        checkCustomer?.customer[0].chatRoom[0].id,
+                        message,
+                        author
+                    )
                 }
             }
         }
