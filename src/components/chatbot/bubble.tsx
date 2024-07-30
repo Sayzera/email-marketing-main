@@ -14,7 +14,7 @@ type Props = {
         content: string
         link?:  string
     }
-    createdAt: Date
+    createdAt?: Date
 }
 
 export default function Bubble({

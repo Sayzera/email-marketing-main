@@ -12,6 +12,12 @@ export const extractUUIDFromString = (url:string) => {
   )
 }
 
+export const extractURLfromString = (text:string) => {
+  return text.match(
+    /https?:\/\/[^\s]+/g
+  )
+}
+
 
 export const pusherServer = new PusherServer({
   appId: process.env.PUSHER_APP_ID as string,
@@ -21,19 +27,19 @@ export const pusherServer = new PusherServer({
   useTLS: true
 })
 
-// export const pusherClient = new PusherClient(
-//   process.env.NEXT_PUBLIC_PUSHER_APP_KEY as string,
-//   {
-//     cluster: 'mt1'
-//   }
-// )
+export const pusherClient = new PusherClient(
+  process.env.NEXT_PUBLIC_PUSHER_APP_KEY as string,
+  {
+    cluster: 'mt1'
+  }
+)
 
 export const postToParent = (message:string) => {
   window.parent.postMessage(message, '*')
 
 }
 
-export const extractEmilsFromString = (text:string) => {
+export const extractEmailsFromString = (text:string) => {
   return text.match(/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi)
 }
 
