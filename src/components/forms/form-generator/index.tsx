@@ -22,6 +22,7 @@ type Props = {
     lines?: number;
     form?: string;
     disabled?:boolean
+    defaultValue?:string
 }
 
 export default function FormGenerator({
@@ -35,22 +36,30 @@ export default function FormGenerator({
     errors,
     lines,
     form,
-    disabled=false
+    disabled=false,
+    defaultValue
+    
 }: Props) {
     switch (inputType) {
         case 'input':
             return (
                 <Label htmlFor={`input-${label}`} className='flex flex-col gap-2'>
-                    {label && (
+                    {
+                        label && (
+                            <Label>
+                            {label}
+                        </Label>
+                        )
+                    }
                         <Input
                             id={`input-${label}`}
                             type={type}
+                            defaultValue={defaultValue}
                             placeholder={placeholder}
                             form={form}
                             disabled={disabled}
                             {...register(name)}
                         />
-                    )}
                     <ErrorMessage
                         errors={errors}
                         name={name}
@@ -109,6 +118,7 @@ export default function FormGenerator({
                             id={`input-${label}`}
                             placeholder={placeholder}
                             form={form}
+                            defaultValue={defaultValue}
                             {...register(name)}
                             rows={lines}
                         />

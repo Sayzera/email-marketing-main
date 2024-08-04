@@ -3,6 +3,7 @@
 import { client } from "@/lib/prisma";
 
 export const onDomainCustomerResponses = async (customerId: string) => {
+  console.log(customerId, 'customer id')
   try {
     const customerQuestions = await client.customer.findUnique({
       where: {
@@ -27,3 +28,60 @@ export const onDomainCustomerResponses = async (customerId: string) => {
     console.log(error);
   }
 };
+
+
+export const onGetAllDomainBookings = async (domainId:string) => {
+  try {
+    const bookings = await client.bookings.findMany({
+      where: {
+        domainId
+      },
+      select: {
+        slot:true,
+        date:true,
+      }
+    })
+
+    if(bookings) {
+      return bookings 
+    }
+  }catch(error) {
+    console.log(error)
+  }
+}
+
+export const onBookNewAppointment = async (
+  domainId: string,
+  customerId: string,
+  slot: string,
+  date: string,
+  email: string
+) => {
+  try {
+    const booking = await client.customer.update({
+      where: {
+        id: customerId,
+      },
+      data: {
+        booking: {
+          create: {
+            domainId,
+            slot,
+            date,
+            email
+          }
+        }
+      }
+    })
+
+    if(booking) {
+      return {
+        status: 200,
+        message: 'Randevu başarıyla oluşturuldu'
+      }
+    }
+   
+  }catch(error) {
+    console.log(error)
+  }
+}
